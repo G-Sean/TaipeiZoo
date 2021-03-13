@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.ncapdevi:frag-nav:3.2.0@aar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-2/files-2.1/e2121c1416d0a3cd2ba7f7c370be900f/jetified-frag-nav-3.2.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-2/files-2.1/e2121c1416d0a3cd2ba7f7c370be900f/jetified-frag-nav-3.2.0/res" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-2/files-2.1/e2121c1416d0a3cd2ba7f7c370be900f/jetified-frag-nav-3.2.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.ncapdevi/frag-nav/3.2.0/502832bc5fceb85251a07dc47634f162aa3bb16/frag-nav-3.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

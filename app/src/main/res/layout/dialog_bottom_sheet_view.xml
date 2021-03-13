@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_bottom_sheet"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="@dimen/dp_40"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/rl_event_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:background="@drawable/shape_bottom_sheet">
+
+            <View
+                android:layout_width="@dimen/dp_56"
+                android:layout_height="@dimen/dp_4"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/shape_rect_gray_btn" />
+
+        </RelativeLayout>
+
+        <View
+            style="@style/shadowBottom"
+            android:layout_below="@+id/rl_event_view" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_plant_category"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/rl_event_view"
+            android:padding="@dimen/dp_5" />
+    </RelativeLayout>
+</FrameLayout>

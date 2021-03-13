@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Zoo_Taipei_Sample</string>
+    <string name="default_memo">無休館資訊</string>
+    <string name="web_open">在網頁開啟</string>
+
+    <!-- Plants Info -->
+    <string name="plants_also_know">別名</string>
+    <string name="plants_brief">簡介</string>
+    <string name="plants_feature">辨認方式</string>
+    <string name="plants_function">功能性</string>
+    <string name="plants_last_update">最後更新：%s</string>
+
+    <string name="err_msg">發生錯誤</string>
+    <string name="zoo_taipei">臺北市立動物園</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="version">version 1.0.0"</string>
+</resources>
