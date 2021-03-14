@@ -9,7 +9,7 @@ import io.reactivex.disposables.Disposable
 
 open class BasePresenter<V>(rootView: V?) : IPresenter {
     var mRootView: V? = rootView
-    var mContext: Context? = null
+    private var mContext: Context? = null
     private var compositeDisposable: CompositeDisposable? = null
 
     fun addCompositeDisposable(disposable: Disposable) {

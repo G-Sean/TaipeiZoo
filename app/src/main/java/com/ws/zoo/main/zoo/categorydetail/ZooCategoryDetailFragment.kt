@@ -4,10 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.*
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -17,23 +15,16 @@ import com.ws.zoo.R
 import com.ws.zoo.data.model.response.plant.PlantDataModel
 import com.ws.zoo.data.model.response.plant.ResultPlantDataResponse
 import com.ws.zoo.data.model.response.zoo.ZooDataModel
+import com.ws.zoo.databinding.FragmentZooCategoryDetailBinding
 import com.ws.zoo.main.base.BaseFragment
 import com.ws.zoo.main.zoo.categorydetail.adapter.PlantCategoryListAdapter
 import com.ws.zoo.main.zoo.plant.PlantCategoryDetailFragment
-import org.w3c.dom.Text
+import kotlinx.android.synthetic.main.dialog_bottom_sheet_view.*
 
-class ZooCategoryDetailFragment : BaseFragment(), View.OnClickListener,
+class ZooCategoryDetailFragment :
+    BaseFragment<FragmentZooCategoryDetailBinding>(FragmentZooCategoryDetailBinding::inflate),
+    View.OnClickListener,
     ZooCategoryDetailContract.View {
-    private var ivPic: ImageView? = null
-    private var tvInfo: TextView? = null
-    private var tvMemo: TextView? = null
-    private var tvCategory: TextView? = null
-    private var tvWebOpen: TextView? = null
-    private var frameLayout: FrameLayout? = null
-    private var rvPlantCategory: RecyclerView? = null
-    private var ivBack: ImageView? = null
-    private var tvTitle: TextView? = null
-    private var rlEventView: RelativeLayout? = null
 
     private var plantCategoryListAdapter: PlantCategoryListAdapter? = null
     private val plantDateList: ArrayList<PlantDataModel> = arrayListOf()
@@ -60,12 +51,9 @@ class ZooCategoryDetailFragment : BaseFragment(), View.OnClickListener,
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_zoo_category_detail, container, false)?.apply {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding?.apply {
             plantCategoryListAdapter = PlantCategoryListAdapter(plantDateList)
             plantCategoryListAdapter?.setOnItemClickListener { adapter, _, position ->
                 adapter.getItem(position)?.let { plantInfo ->
@@ -79,23 +67,11 @@ class ZooCategoryDetailFragment : BaseFragment(), View.OnClickListener,
                 }
             }
 
-            ivPic = findViewById(R.id.iv_pic)
-            tvInfo = findViewById(R.id.tv_info)
-            tvMemo = findViewById(R.id.tv_memo)
-            tvCategory = findViewById(R.id.tv_category)
-            rlEventView = findViewById(R.id.rl_event_view)
-            rlEventView?.setOnClickListener(this@ZooCategoryDetailFragment)
-            tvWebOpen = findViewById(R.id.tv_web_open)
-            tvWebOpen?.setOnClickListener(this@ZooCategoryDetailFragment)
+            rl_event_view?.setOnClickListener(this@ZooCategoryDetailFragment)
+            tvWebOpen.setOnClickListener(this@ZooCategoryDetailFragment)
+            ivBack.setOnClickListener(this@ZooCategoryDetailFragment)
 
-            frameLayout = findViewById(R.id.bottom_sheet)
-            ivBack = findViewById(R.id.iv_back)
-            ivBack?.setOnClickListener(this@ZooCategoryDetailFragment)
-
-            tvTitle = findViewById(R.id.tv_title)
-            rvPlantCategory = findViewById(R.id.recycler_view_plant_category)
-
-            rvPlantCategory?.apply {
+            recycler_view_plant_category?.apply {
                 layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
                 adapter = plantCategoryListAdapter
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -115,28 +91,25 @@ class ZooCategoryDetailFragment : BaseFragment(), View.OnClickListener,
             }
 
             //init the bottom sheet view
-            frameLayout?.let {
+            bottom_sheet?.let {
                 bottomSheetBehavior = BottomSheetBehavior.from(it)
             }
-        }
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        zooData?.let { data ->
-            context?.let { context ->
-                ivPic?.let { iv ->
-                    Glide.with(context).load(data.picUrl).into(iv)
+            zooData?.let { data ->
+                context?.let { context ->
+                    ivPic.let { iv ->
+                        Glide.with(context).load(data.picUrl).into(iv)
+                    }
                 }
+                tvTitle.text = data.name
+                tvInfo.text = data.info
+                tvMemo.text = if (TextUtils.isEmpty(data.memo)) {
+                    context?.getString(R.string.default_memo)
+                } else {
+                    data.memo
+                }
+                tvCategory.text = data.category
             }
-            tvTitle?.text = data.name
-            tvInfo?.text = data.info
-            tvMemo?.text = if (TextUtils.isEmpty(data.memo)) {
-                context?.getString(R.string.default_memo)
-            } else {
-                data.memo
-            }
-            tvCategory?.text = data.category
         }
     }
 
@@ -144,7 +117,7 @@ class ZooCategoryDetailFragment : BaseFragment(), View.OnClickListener,
         when (view?.id) {
             R.id.tv_web_open -> {
                 zooData?.let {
-                    val intent: Intent = Intent()
+                    val intent = Intent()
                     intent.action = Intent.ACTION_VIEW
                     intent.data = Uri.parse(it.url)
                     startActivity(intent)

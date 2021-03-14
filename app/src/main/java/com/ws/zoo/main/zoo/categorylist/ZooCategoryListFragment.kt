@@ -1,11 +1,7 @@
 package com.ws.zoo.main.zoo.categorylist
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,16 +9,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ws.zoo.R
 import com.ws.zoo.data.model.response.zoo.ResultZooDataResponse
 import com.ws.zoo.data.model.response.zoo.ZooDataModel
+import com.ws.zoo.databinding.FragmentZooCategoryListBinding
 import com.ws.zoo.main.base.BaseFragment
 import com.ws.zoo.main.view.dialog.CustomDialog
 import com.ws.zoo.main.zoo.categorydetail.ZooCategoryDetailFragment
 import com.ws.zoo.main.zoo.categorylist.adapter.ZooCategoryListAdapter
 
-class ZooCategoryListFragment : BaseFragment(), View.OnClickListener,
+class ZooCategoryListFragment :
+    BaseFragment<FragmentZooCategoryListBinding>(FragmentZooCategoryListBinding::inflate),
+    View.OnClickListener,
     ZooCategoryListContract.View {
-    var rvZooCategory: RecyclerView? = null
-    private var tvTitle : TextView? = null
-    private var ivMenu :ImageView? = null
+
     private var mPresenter: ZooCategoryListPresenter? = null
     private var zooCategoryListAdapter: ZooCategoryListAdapter? = null
     private val zooDateList: ArrayList<ZooDataModel> = arrayListOf()
@@ -34,12 +31,9 @@ class ZooCategoryListFragment : BaseFragment(), View.OnClickListener,
         mPresenter?.getResultData("resourceAquire")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_zoo_category_list, container, false)?.apply {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding?.apply {
             zooCategoryListAdapter = ZooCategoryListAdapter(zooDateList)
             zooCategoryListAdapter?.setOnItemClickListener { adapter, _, position ->
                 adapter.getItem(position)?.let { zooInfo ->
@@ -52,27 +46,19 @@ class ZooCategoryListFragment : BaseFragment(), View.OnClickListener,
                     }
                 }
             }
-            ivMenu = findViewById(R.id.iv_menu)
-            ivMenu?.setOnClickListener(this@ZooCategoryListFragment)
-            tvTitle = findViewById(R.id.tv_title)
+            ivMenu.setOnClickListener(this@ZooCategoryListFragment)
 
-            tvTitle?.text = getString(R.string.zoo_taipei)
-            rvZooCategory = findViewById(R.id.recycler_view_zoo_category)
-            rvZooCategory?.apply {
+            tvTitle.text = getString(R.string.zoo_taipei)
+            recyclerViewZooCategory.apply {
                 layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
                 adapter = zooCategoryListAdapter
             }
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-    }
-
     override fun onClick(view: View?) {
-        when(view?.id){
-            R.id.iv_menu ->mFragmentNavigation.openDrawer()
+        when (view?.id) {
+            R.id.iv_menu -> mFragmentNavigation.openDrawer()
         }
     }
 

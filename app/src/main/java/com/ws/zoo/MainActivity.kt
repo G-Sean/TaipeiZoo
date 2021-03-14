@@ -1,22 +1,27 @@
 package com.ws.zoo
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.View
-import android.widget.ImageView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.ncapdevi.fragnav.FragNavController
+import com.ncapdevi.fragnav.FragNavTransactionOptions
+import com.ws.zoo.databinding.ActivityMainBinding
 import com.ws.zoo.main.base.BaseFragment
 import com.ws.zoo.main.zoo.categorylist.ZooCategoryListFragment
 import io.reactivex.disposables.CompositeDisposable
 
 class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
-    private lateinit var drawer:DrawerLayout
     private var compositeDisposable: CompositeDisposable? = null
+    private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val fragments by lazy {
+        listOf(
+            ZooCategoryListFragment.newInstance()
+        )
+    }
     private val fragNavController: FragNavController =
         FragNavController(
             supportFragmentManager,
@@ -25,23 +30,26 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        drawer = findViewById(R.id.drawer_layout)
+        setContentView(binding.root)
+
         val toggle = ActionBarDrawerToggle(
-            this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer.addDrawerListener(toggle)
-        toggle.syncState()
-
-        val fragments = listOf(
-            ZooCategoryListFragment.newInstance()
+            this,
+            binding.drawerLayout,
+            null,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
+        binding.drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
         fragNavController.apply {
             rootFragments = fragments
+            defaultTransactionOptions = FragNavTransactionOptions.newBuilder().customAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left, R.anim.slide_in_from_left, R.anim.slide_out_to_right).build()
         }
 
         fragNavController.initialize(0, savedInstanceState)
+
     }
 
     override fun onDestroy() {
@@ -55,18 +63,22 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 
     override fun popFragment() {
         when {
-            drawer.isDrawerOpen(GravityCompat.START) -> drawer.closeDrawer(GravityCompat.START)
+            binding.drawerLayout.isDrawerOpen(GravityCompat.START) -> binding.drawerLayout.closeDrawer(
+                GravityCompat.START
+            )
             fragNavController.isRootFragment.not() -> fragNavController.popFragment()
         }
     }
 
     override fun openDrawer() {
-        drawer.openDrawer(GravityCompat.START)
+        binding.drawerLayout.openDrawer(GravityCompat.START)
     }
 
     override fun onBackPressed() {
         when {
-            drawer.isDrawerOpen(GravityCompat.START) -> drawer.closeDrawer(GravityCompat.START)
+            binding.drawerLayout.isDrawerOpen(GravityCompat.START) -> binding.drawerLayout.closeDrawer(
+                GravityCompat.START
+            )
             fragNavController.isRootFragment.not() -> fragNavController.popFragment()
             else -> super.onBackPressed()
         }
